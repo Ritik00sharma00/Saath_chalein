@@ -11,7 +11,6 @@ const PlansPage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate an API call
     setTimeout(() => {
       setLoading(false);
     }, 2000);
@@ -39,7 +38,7 @@ const PlansPage = () => {
 
   return (
      <>
-         {  
+         { loading ? <Loader/> : 
       
       <div className="container relative  overscroll-none mx-auto p-4 h-screen" style={{ overflow: "hidden" }}>
    

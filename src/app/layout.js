@@ -16,7 +16,6 @@ export default function RootLayout({ children }) {
   return (
 
     <html lang="en">
-   
       <body>
         <div className="p-5  h-[300px]" >
         <Navbar/>

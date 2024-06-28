@@ -12,8 +12,12 @@ import Imageupload from '../../components/FormComponents/Imageupload';
 import { FaCity } from "react-icons/fa";
 import Loader from '@/components/Loader/Loader';
 import Link from 'next/link'
+import Router from 'next/router';
+import { useRouter } from 'next/navigation';
 
 const Signupform = () => {
+
+  const router =useRouter();
   const [loading, setloading] = useState(false);
   useEffect(() => {
     setTimeout(() => {
@@ -29,7 +33,11 @@ const Signupform = () => {
   const visitorApiPrjectId = ""
 
   const onSubmit = (data) => {
+
+  
     console.log(data);
+
+    router.push('/Signinform');
   };
 
   return (

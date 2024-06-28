@@ -4,7 +4,7 @@ import { FaStar } from "react-icons/fa6";
 
 const FeedbackCard = ({ imageSrc, name, review }) => {
   return (
-    <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
+    <div className="w-full mx-auto bg-white rounded-xl shadow-md overflow-hidden ">
       
       <div className="md:flex">
         <div className="md:flex-shrink-0">

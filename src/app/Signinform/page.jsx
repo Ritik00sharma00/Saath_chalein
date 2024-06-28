@@ -8,11 +8,12 @@ import Travelling from '../../assets/Travelling.png';
 import Image from 'next/image';
 import Loader from '@/components/Loader/Loader';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 const SigninForm = () => {
   const [loading, setloading] = useState(false);
+  const router=useRouter();
   useEffect(() => {
-    // Simulate an API call
     setTimeout(() => {
       setloading(false);
     }, 2000);
@@ -23,6 +24,7 @@ const SigninForm = () => {
 
   const onSubmit = data => {
     console.log(data);
+    router.navigate('/Signupform')
   };
 
   return (

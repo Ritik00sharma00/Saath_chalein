@@ -8,6 +8,7 @@ import DestinationCard from "@/components/Card/DestinationCard";
 import FeedbackCard from "@/components/Card/Feedbackcard";
 import Photos from "../assets/Photos.png";
 import Logo from "@/components/Navbar/Logo";
+
 export default function Home() {
   const [loading, setloading] = useState(false);
   
@@ -15,7 +16,7 @@ export default function Home() {
     setTimeout(() => {
       setloading(false);
     }, 2000);
-  }, []);
+  });
   return (
     <>
     {loading ? <Loader /> :<> <div className="hero "><HeroSection/></div> <div className="flex flex-col  mt-5 bg-gradient-to-r from-[#53B0A7] to-[#C0DEDB] md:gap-[15vw] gap-4">
@@ -73,7 +74,7 @@ export default function Home() {
         </div>
 
 
-        <div className="xl:w-full w-[80%]  lg:mx-32 mx-0 flex lg:flex-row flex-col   gap-10  justify-between items-center from-[#2a4d4a] to-[#adf6ef]">
+        <div className=" w-[50%]  lg:mx-32 mx-0 flex lg:flex-row flex-col   gap-32  justify-between items-center from-[#2a4d4a] to-[#adf6ef]">
           <div className="  flex flex-col gap-10">
             <h1 className="text-black  font-bold text-[32px] font-merriweather">
               Feedbacks
@@ -90,7 +91,8 @@ export default function Home() {
         </div>
 
 
-      </div> </> }
+      </div> </>
+    }
       
     </>
   );
