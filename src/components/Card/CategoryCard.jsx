@@ -1,25 +1,40 @@
-import React from 'react'
+'use client';
+
+import React from 'react';
 import Image from 'next/image';
-const CategoryCard = ({img,head,desc,margin}) => {
+import { motion } from 'framer-motion';
+import { FiArrowUpRight } from 'react-icons/fi';
+
+const CategoryCard = ({ img, head, desc, index = 0 }) => {
   return (
-    <>
-    <div className={`relative xl:w-[396px] lg:w-auto md:w-[396px] w-auto ${margin ? margin :''}`}>
-    <Image 
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-80px' }}
+      transition={{ duration: 0.6, delay: index * 0.12, ease: 'easeOut' }}
+      whileHover={{ y: -8 }}
+      className="group relative h-[420px] overflow-hidden rounded-3xl shadow-card"
+    >
+      <Image
         src={img}
-        className='xl:w-[396px] lg:mx-0 mx-auto lg:w-[30vw] w-[55vw]'
-        alt='category 1' 
+        alt={head}
+        fill
+        className="object-cover transition-transform duration-700 group-hover:scale-105"
       />
-        <div className="lg:absolute static lg:top-16 lg:translate-x-50 translate-x-0 lg:mt-0 mt-2 flex flex-col gap-3 lg:left-16 left-0 ">
-            <h1 className='bg-yellow md:text-auto   font-bold  
-             rounded-[14px]  font-workSans text-nowrap text-center px-2 md:text-[2vw] text-[6vw] py-1'>{head}</h1>
-            <h1 className='font-medium  lg:max-w-[18vw]  font-workSans text-white'>
-                {desc}
-            </h1>
+      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent" />
+
+      <div className="absolute inset-x-0 bottom-0 p-6">
+        <span className="inline-flex items-center gap-2 rounded-full bg-accent-400 px-4 py-2 font-serif text-lg font-bold text-slate-900 shadow-lg">
+          {head}
+        </span>
+        <p className="mt-3 text-sm leading-relaxed text-slate-200">{desc}</p>
+        <div className="mt-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-accent-300">
+          Explore
+          <FiArrowUpRight className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
         </div>
-    </div>
-    
-    </>
-  )
-}
+      </div>
+    </motion.div>
+  );
+};
 
 export default CategoryCard;
