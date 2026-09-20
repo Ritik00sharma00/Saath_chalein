@@ -1,141 +1,182 @@
-"use client"
-import React, { useEffect, useState } from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import Image from 'next/image';
+import { useDispatch, useSelector } from 'react-redux';
+import { AnimatePresence, motion } from 'framer-motion';
+import { FiCalendar, FiUsers, FiMessageCircle, FiSend, FiCheck, FiLoader } from 'react-icons/fi';
+import CommentCard from '@/components/CommentSection/CommentCard';
+import Photos from '../../assets/Photos.png';
+import { createJoinRequest } from '@/store/requestsSlice';
+import { selectIsAuthenticated, selectUserId, selectUser } from '@/store/authSlice';
 
-import selfie from '../../assets/selfie.png';
-import  Photos from '../../assets/Photos.png';
-import CommentCard from '../CommentSection/CommentCard';
-import { FiMessageCircle } from "react-icons/fi";
-import { AiOutlineMessage } from "react-icons/ai";
-import { PiHandSwipeRightFill } from "react-icons/pi";
-import { MdOutlineHandshake } from "react-icons/md";
-
-const   FeedCard = () => {
-
-
+const FeedCard = ({ trip, index = 0 }) => {
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+  const user = useSelector(selectUser);
+  const userId = useSelector(selectUserId);
   const [showComments, setShowComments] = useState(false);
-  
-  const [showRequest, setShowRequest] = useState(false);
+  const [requested, setRequested] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [comment, setComment] = useState('');
+  const avatar = user?.avatar || Photos;
+  const isOwner = String(trip.ownerId) === String(userId);
 
-  const comments = [
-    { id: 1, username: 'user1', 
-      text: 'This is a comment.', 
-      profilePic: 'https://via.placeholder.com/150'
-    },
-    { id: 2,
-      username: 'user2',
-      text: 'This is another comment.', 
-      profilePic: 'https://via.placeholder.com/150' },
-  ];
+  const formatDate = (iso) => {
+    if (!iso) return 'Flexible';
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return iso;
+    return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+  };
+
+  const handleRequest = async () => {
+    if (!isAuthenticated || requested || sending || isOwner) return;
+    setSending(true);
+    const result = await dispatch(
+      createJoinRequest({ userId, tripId: trip.id })
+    );
+    setSending(false);
+    if (createJoinRequest.fulfilled.match(result)) setRequested(true);
+  };
 
   return (
-    
-    <div className="bg-slate-200 rounded-md xl:w-4/5 w-full p-4">
-      <div className=" ">
-        <div className="w-12">
-          <Image
-            src={Photos}
-            alt="Profile"
-            width={400}
-            height={400}
-            className="rounded-full"
-        
-          />
-        </div>
-        <div className="xl:ml-4 ml-0">
-          <h2 className=" font-workSans font-semibold  text-black ">John Doe</h2>
-        </div>
-        
-      </div>
-      <div className="">
-
-        <Image
-          src={selfie}
-          alt="News Image" 
-          width={300}
-          height={200}
-          className="rounded-lg"
-          priority
-        />
-      </div>
-      
-      <p className=" mb-4">
-        This is a short description of the news feed. It provides an overview of the content in the feed.
-      </p>
-      <div className=" flex lg:flex-row flex-col gap-2  ">
-         <button
-        className="text-white w-full text-24 font-workSans font-medium justify-center p-2 flex items-center gap-4 rounded-[14px] bg-blue-700"
-        onClick={() => setShowComments(!showComments)}
-      >
-        
-        {showComments ? <AiOutlineMessage />: <FiMessageCircle/>}
-        <span className=' '>Comments</span>
-      </button>
-
-      <button
-      className={`text-white w-full text-24 font-workSans font-medium justify-center p-2 xl:p-3 flex items-center gap-4 rounded-[14px] ${showRequest ? 'bg-gray-700 transition-all duration-2000 text-black font-bold' : 'bg-blue-700'}`}
-      onClick={() => setShowRequest(!showRequest)}
+    <motion.article
+      initial={{ opacity: 0, y: 32 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      className="rounded-3xl bg-white p-5 shadow-card sm:p-6"
     >
-      {showRequest ? <MdOutlineHandshake /> : <PiHandSwipeRightFill />}
-      <span className=' '>Request</span>
-    </button>
-
-      </div>
-
-      <div className="">
-      {showComments && (
-        <>
-        
-        <div className=" bg-gray-100 p-4 rounded">
-          {/* {comments.map(comment => (
-            <CommentCard
-              key={comment.id}
-              username="comment.username"
-              text="comment.text"
-              profilePic={comment.profilePic}
-            />
-          ))}  */}
-
-          <CommentCard username="John " text="jwefhcewjs" profilePic={Photos} />
-          
-          <CommentCard username="John " text="jwefhcewjs" profilePic={Photos} />
+      <header className="flex items-center gap-3">
+        <span className="relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-full bg-brand-100 text-sm font-bold text-brand-700">
+          {avatar ? (
+            <Image src={avatar} alt={trip.ownerName} fill className="object-cover" />
+          ) : (
+            trip.ownerName?.charAt(0)
+          )}
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="truncate font-semibold text-slate-900">
+            {trip.ownerName}
+            {isOwner && (
+              <span className="ml-2 rounded-full bg-brand-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-brand-700">
+                You
+              </span>
+            )}
+          </p>
+          <p className="flex items-center gap-1 text-xs text-slate-400">
+            <FiCalendar size={12} /> {formatDate(trip.tripPlanned)}
+          </p>
         </div>
-        
-        
-        
-        </>
-      )} 
-      </div>
+        <span className="rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
+          {trip.members}
+        </span>
+      </header>
 
-      
-      <div className="">
-      {showComments && (
-        <>
-        
-        <div className=" md:fixed  transition transform duration-2000 ease-linear absolute bg-gray-100 p-4 rounded">
-          {/* {comments.map(comment => (
-            <CommentCard
-              key={comment.id}
-              username="comment.username"
-              text="comment.text"
-              profilePic={comment.profilePic}
-            />
-          ))}  */}
-
-          <CommentCard username="John " text="jwefhcewjs" profilePic={Photos} />
-          
-          <CommentCard username="John " text="jwefhcewjs" profilePic={Photos} />
+      <div className="mt-4 rounded-2xl bg-gradient-to-br from-brand-600 to-brand-800 p-6 text-white">
+        <h3 className="font-serif text-xl font-bold sm:text-2xl">{trip.tripName}</h3>
+        <p className="mt-2 text-sm leading-relaxed text-brand-50">
+          {trip.tripGroup ? `Group: ${trip.tripGroup}` : 'A fresh adventure, made for the community.'}
+        </p>
+        <div className="mt-4 flex flex-wrap gap-2">
+          <span className="rounded-full bg-white/15 px-3 py-1 text-xs font-medium backdrop-blur">
+            {isOwner ? '#Organized by you' : '#Community trip'}
+          </span>
+          <span className="rounded-full bg-white/15 px-3 py-1 text-xs font-medium backdrop-blur">
+            #Humsafar
+          </span>
         </div>
-        
-        
-        
-        </>
-      )} 
       </div>
-     
-    </div>
+
+      <div className="mt-4 flex gap-3">
+        <button
+          onClick={() => setShowComments((v) => !v)}
+          className={`flex flex-1 items-center justify-center gap-2 rounded-2xl px-4 py-3 text-sm font-semibold transition ${
+            showComments
+              ? 'bg-brand-600 text-white'
+              : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+          }`}
+        >
+          <FiMessageCircle />
+          {showComments ? 'Hide' : 'Comments'}
+        </button>
+        {!isOwner && (
+          <button
+            onClick={handleRequest}
+            disabled={sending || requested || !isAuthenticated}
+            className={`flex flex-1 items-center justify-center gap-2 rounded-2xl px-4 py-3 text-sm font-semibold transition ${
+              requested
+                ? 'bg-emerald-500 text-white'
+                : !isAuthenticated
+                  ? 'cursor-not-allowed bg-slate-100 text-slate-400'
+                  : 'bg-slate-900 text-white hover:bg-slate-700'
+            }`}
+          >
+            {sending ? (
+              <>
+                <FiLoader className="animate-spin" /> Sending...
+              </>
+            ) : requested ? (
+              <>
+                <FiCheck /> Request sent
+              </>
+            ) : (
+              <>
+                <FiUsers /> Request to join
+              </>
+            )}
+          </button>
+        )}
+      </div>
+
+      {!isAuthenticated && (
+        <p className="mt-2 text-center text-xs text-slate-400">
+          Sign in to send join requests.
+        </p>
+      )}
+
+      <AnimatePresence>
+        {showComments && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+            className="overflow-hidden"
+          >
+            <div className="mt-4 space-y-3 rounded-2xl bg-slate-50 p-4">
+              {[
+                { username: 'Priya', text: 'This sounds amazing, I\'m interested!' },
+                { username: 'Aditya', text: 'Happy to share tips from my last trip.' },
+              ].map((c) => (
+                <CommentCard key={c.username} {...c} profilePic={Photos} />
+              ))}
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  setComment('');
+                }}
+                className="flex items-center gap-2"
+              >
+                <input
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  placeholder="Add a comment..."
+                  className="w-full rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-brand-500"
+                />
+                <button
+                  type="submit"
+                  aria-label="Post comment"
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-600 text-white transition hover:bg-brand-700"
+                >
+                  <FiSend size={16} />
+                </button>
+              </form>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.article>
   );
 };
 
 export default FeedCard;
-

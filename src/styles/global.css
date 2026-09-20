@@ -2,115 +2,77 @@
 @tailwind components;
 @tailwind utilities;
 
-
-
-/* Firefox */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: var(--secondary) var(--primary);
+:root {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Merriweather", Georgia, serif;
 }
 
-/* Chrome, Edge, and Safari */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #fafbfc;
+  color: #1f2937;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: var(--tw-color-brand-200, #a7f3d0);
+  color: #064e3b;
+}
+
 *::-webkit-scrollbar {
-  width: 15px;
+  width: 8px;
+  height: 8px;
 }
 
 *::-webkit-scrollbar-track {
-  background: purple;
-  border-radius: 5px;
+  background: transparent;
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: purple;
-  border-radius: 14px;
-  border: 3px solid var(--primary);
+  background-color: #cbd5e1;
+  border-radius: 9999px;
 }
 
-.hero
-{
-    background: url("../assets/background.png") no-repeat  center 100%;
-    background-size: 100%;
-    
-    border: 0;
-    border-radius: 20px;
-}
-.hero{
-    
-height: 49vw;
-
+*::-webkit-scrollbar-thumb:hover {
+  background-color: #94a3b8;
 }
 
-@media (max-width: 300px) {
-    .hero {
-      height: 80vw; 
-    }
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
   }
 
-  @keyframes shimmer {
-    0% {
-      transform: translateX(-100%);
-    }
-    100% {
-      transform: translateX(100%);
-    }
-  }
-  
-  .animate-shimmer {
-    animation: shimmer 2s infinite;
-  }
-  
-  /* Custom styling for the css-dom element */
-  .css-dom {
-    width: 70rem;
-    height: 28rem;
-    border-radius: 0.375rem;
-    box-shadow: 0 2.5rem 11.25rem rgba(0, 0, 0, 0.2);
-    background-repeat: no-repeat;
-    background-image:
-      radial-gradient(circle 1rem, lightgray 99%, transparent 0),
-      linear-gradient(lightgray, lightgray),
-      linear-gradient(lightgray, lightgray),
-      linear-gradient(lightgray, lightgray),
-      linear-gradient(lightgray, lightgray),
-      linear-gradient(#fff, #fff);
-    background-size:
-      2rem 2rem,
-      12.5rem 2rem,
-      11.25rem 2rem,
-      14.375rem 1rem,
-      100% 2.5rem,
-      70rem 6.25rem;
-    background-position:
-      1.5rem 1.875rem,
-      4.125rem 1.875rem,
-      1.5rem 5.625rem,
-      1.5rem 8.875rem,
-      0 11.25rem,
-      0 0;
+  .section-title {
+    @apply text-sm font-semibold uppercase tracking-[0.2em] text-brand-600;
   }
 
+  .heading-display {
+    @apply font-serif text-3xl font-bold leading-tight text-slate-900 sm:text-4xl lg:text-5xl;
+  }
 
-  .about-container {
-    background-color: #e0e0e0;
-    color: #000;
-    padding: 20px;
-    margin-top: 50px;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 2s ease-out, transform 2s ease-out;
+  .text-balance {
+    text-wrap: balance;
+  }
 }
 
-.about-container.slide-up {
-    opacity: 1;
-    transform: translateY(0);
+.hero-bg {
+  background: linear-gradient(
+    180deg,
+    rgba(6, 78, 59, 0.15) 0%,
+    rgba(6, 78, 59, 0.55) 55%,
+    rgba(5, 46, 37, 0.88) 100%
+  ),
+  url("../assets/background.png") no-repeat center center;
+  background-size: cover;
 }
 
-.typical-text {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
-}
-
-.about-content {
-    margin-top: 20px;
+.glass {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }

@@ -1,45 +1,51 @@
-import { useState } from 'react';
+'use client';
 
-const Imageupload = ({ field }) => {
+import { useState } from 'react';
+import { FiUpload, FiUser } from 'react-icons/fi';
+
+const Imageupload = ({ field, label = 'Upload profile photo' }) => {
   const [preview, setPreview] = useState(null);
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreview(reader.result);
-        field.onChange(file); 
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleButtonClick = () => {
-    document.getElementById('fileInput').click();
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreview(reader.result);
+      field.onChange(file);
+    };
+    reader.readAsDataURL(file);
   };
 
   return (
-    <div>
+    <div className="flex flex-col items-center gap-3">
       <div
-        onClick={handleButtonClick}
-        className="cursor-pointer relative w-48 h-48 border-2 border-dashed border-gray-400 rounded-lg overflow-hidden"
+        onClick={() => document.getElementById('profile-upload').click()}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => e.key === 'Enter' && document.getElementById('profile-upload').click()}
+        className="group relative flex h-28 w-28 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-dashed border-slate-300 bg-slate-50 transition hover:border-brand-500"
       >
         {preview ? (
-          <img src={preview} alt="Selected" className="w-full h-full object-cover" />
+          <img src={preview} alt="Profile preview" className="h-full w-full object-cover" />
         ) : (
-          <div className="flex justify-center items-center w-full h-full">
-            <span>Click to upload</span>
-          </div>
+          <span className="flex flex-col items-center gap-1 text-slate-400 transition group-hover:text-brand-600">
+            <FiUser size={26} />
+            <span className="text-[10px] font-medium">{label}</span>
+          </span>
         )}
+        <span className="absolute bottom-0 right-0 flex h-8 w-8 items-center justify-center rounded-full bg-brand-600 text-white shadow-lg">
+          <FiUpload size={14} />
+        </span>
       </div>
       <input
+        id="profile-upload"
         type="file"
-        id="fileInput"
         className="hidden"
         onChange={handleImageChange}
         accept="image/*"
       />
+      <p className="text-xs text-slate-400">PNG or JPG · max 5MB</p>
     </div>
   );
 };
