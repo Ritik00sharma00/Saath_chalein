@@ -1,27 +1,15 @@
 import React from 'react';
 import Image from 'next/image';
 
-const  CommentCard= ({ username, text, profilePic }) => {
-
+const CommentCard = ({ username, text, profilePic }) => {
   return (
-    <div className=" ">
-      <div className="w-8 flex items-center gap-2 h-8">
-        <Image
-          src={profilePic}
-          alt={`${username}'s profile picture`}
-          width={32}
-          height={32}
-          className="rounded-full object-cover"
-        />
-        
-        <strong className='font-[merriweather'>{username}</strong>
-      </div>
-      <div>
-        <div className="">
-          
-        <p className="text-sm ml-10 font-[workSans] font-medium"> {text}</p>
-
-        </div>
+    <div className="flex items-start gap-3">
+      <span className="relative h-8 w-8 shrink-0 overflow-hidden rounded-full">
+        <Image src={profilePic} alt={`${username}'s profile`} fill className="object-cover" />
+      </span>
+      <div className="min-w-0 rounded-2xl rounded-tl-sm bg-white px-4 py-2.5 shadow-sm">
+        <p className="text-xs font-semibold text-slate-700">{username}</p>
+        <p className="mt-0.5 text-sm text-slate-500">{text}</p>
       </div>
     </div>
   );
